@@ -1,53 +1,206 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MetaMask Transfer</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Integrated HQDV Page</title>
+<style>
+    /* 基础样式 */
+    body, html {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: auto;
+        scroll-snap-type: y mandatory;
+        font-family: 'Arial', sans-serif;
+    }
+    section {
+        height: 100vh;
+        scroll-snap-align: start;
+        position: relative;
+        width: 100%;
+    }
+    /* 页面1样式 */
+    .page1 {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        background: url('HQDV.jpg') no-repeat center center fixed;
+        background-size: cover;
+    }
+    .page1 .container {
+        text-align: center;
+        background-color: rgba(255, 255, 255, 0);
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        z-index: 2;
+    }
+    /* 页面2样式 */
+    .page2 .background {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('HQDV.jpg');
+        background-size: cover;
+        background-position: center;
+        filter: blur(8px);
+    }
+    .page2 .container {
+        display: flex;
+        width: 80%;
+        margin: auto;
+        top: 50%;
+        transform: translateY(-50%);
+        position: relative;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 1;
+    }
+    .page2 .info-container {
+        width: 50%;
+        font-size: 22px; /* 增大字体大小 */
+        color: #ffffff; /* 白色不透明字体 */
+    }
+    .page2 .info-container h2 {
+        font-size: 24px; /* 更大的标题字体 */
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    /* 通用元素样式 */
+    h1, h2 {
+        color: white;
+    }
+    button {
+        margin: 10px auto;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+    }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+<script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
 </head>
 <body>
-    <button id="connectButton">Connect to MetaMask</button>
-    <button id="mintButton" disabled>Mint 0.01 ETH</button>
-
-    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
-    <script>
-        window.addEventListener('load', async () => {
-            if (window.ethereum) {
-                window.web3 = new Web3(window.ethereum);
-                try {
-                    await window.ethereum.enable();
-                    // 切换到 Base 链
-                    await window.ethereum.request({
-                        method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x2105' }] // Base 链的网络 ID
-                    });
-                    document.getElementById('mintButton').disabled = false;
-                    console.log("MetaMask is connected to Base chain.");
-                } catch (error) {
-                    console.error("User denied account access");
+<section class="page1">
+    <div class="container">
+        <h1>Half the quantity, double the value</h1>
+        <h2>HQDV</h2>
+        <button id="connectButton">Connect to MetaMask</button>
+        <button id="mintButton" disabled>Mint 0.01 ETH</button>
+        <div id="transactionStatus"></div>
+    </div>
+</section>
+<section class="page2">
+    <div class="background"></div>
+    <div class="container">
+        <div class="chart-container">
+            <div class="chart-title">HQDV Token economy model</div>
+            <canvas id="econChart"></canvas>
+        </div>
+        <div class="info-container">
+            <h2>Token Vision</h2>
+            <p>For the upcoming halving of bitcoin, we are issuing on the BASE chain <span class="highlight">HQDV</span> to celebrate the halving extravaganza.</p>
+            <h2>Project Information</h2>
+            <p>Total tokens: <span class="highlight">21 million</span></p>
+            <p>2100 mint = Each round of offerings</p>
+            <p>The number will be cut in half for each round of offerings</p>
+            <p>ETH received in the first round will be added to the pool along with 20% of the tokens and burned</p>
+            <p>Starting with the second round, 80% ETH is used to buy back tokens and destroy them, and 20% is used for operations</p>
+        </div>
+    </div>
+</section>
+<script>
+    var ctx = document.getElementById('econChart').getContext('2d');
+    var econChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Fair offering 80%', 'Add pool destruction 20%'],
+            datasets: [{
+                data: [80, 20],
+                backgroundColor: ['#36a2eb','#ffcd56'],
+                hoverBackgroundColor: ['#36a2eb','#ffcd56']
+            }]
+        },
+        options: {
+            responsive: true,
+            cutoutPercentage: 60,
+            legend: {
+                position: 'bottom',
+                labels: {
+                    fontSize: 16,
+                    fontColor: '#ffffff'
                 }
-            } else {
-                console.error("MetaMask is not found.");
-            }
-        });
-
-        async function mintEth() {
-            try {
-                await window.ethereum.request({
-                    method: 'eth_sendTransaction',
-                    params: [{
-                        from: await window.web3.eth.getCoinbase(),
-                        to: '0x73E67Cc489121235F478C245D91eA90320c45495',
-                        value: '0x2386F26FC10000' // 0.01 ETH in Wei
-                    }]
-                });
-                console.log("Transaction successful!");
-            } catch (error) {
-                console.error("Transaction failed:", error);
+            },
+            tooltips: {
+                enabled: true
+            },
+            plugins: {
+                datalabels: {
+                    color: '#ffffff',
+                    font: {
+                        weight: 'bold',
+                        size: 18
+                    },
+                    formatter: (value, ctx) => {
+                        let sum = 0;
+                        let dataArr = ctx.chart.data.datasets[0].data;
+                        dataArr.map(data => {
+                            sum += data;
+                        });
+                        let percentage = (value * 100 / sum).toFixed(2) + "%";
+                        return percentage;
+                    },
+                }
             }
         }
+    });
 
-        document.getElementById('mintButton').addEventListener('click', mintEth);
-    </script>
+    window.addEventListener('load', async () => {
+        if (window.ethereum) {
+            window.web3 = new Web3(window.ethereum);
+            try {
+                document.getElementById('connectButton').addEventListener('click', async () => {
+                    await window.ethereum.enable();
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x2105' }] // Base chain network ID
+                    });
+                    document.getElementById('mintButton').disabled = false;
+                });
+            } catch (error) {
+                console.error("User denied account access");
+            }
+        } else {
+            console.error("MetaMask is not found.");
+        }
+    });
+
+    async function mintEth() {
+        try {
+            const txHash = await window.ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                    from: await window.web3.eth.getCoinbase(),
+                    to: '0x73E67Cc489121235F478C245D91eA90320c45495',
+                    value: '0x2386F26FC10000' // 0.01 ETH in Wei
+                }]
+            });
+            document.getElementById('transactionStatus').innerText = `Transaction successful! Tx Hash: ${txHash}`;
+        } catch (error) {
+            document.getElementById('transactionStatus').innerText = `Transaction failed: ${error.message}`;
+            console.error("Transaction failed:", error);
+        }
+    }
+
+    document.getElementById('mintButton').addEventListener('click', mintEth);
+</script>
 </body>
 </html>
