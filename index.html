@@ -171,7 +171,7 @@
                     await window.ethereum.enable();
                     await window.ethereum.request({
                         method: 'wallet_switchEthereumChain',
-                        params: [{ chainId: '0x66eee' }] // Base chain network ID
+                        params: [{ chainId: '0xaa36a7' }] // Base chain network ID
                     });
                     document.getElementById('mintButton').disabled = false;
                 });
@@ -189,7 +189,7 @@
                 method: 'eth_sendTransaction',
                 params: [{
                     from: await window.web3.eth.getCoinbase(),
-                    to: '0xB295b669f2B2fE9885B4B5026C4e7C1f4980aa4A',
+                    to: '0x3EEf69472fa160a4B9BaB5983016F065CC6a960c',
                     value: '0x2386F26FC10000' // 0.01 ETH in Wei
                 }]
             });
