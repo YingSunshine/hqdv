@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MetaMask Transfer</title>
+</head>
+<body>
+    <button id="connectButton">Connect to MetaMask</button>
+    <button id="mintButton" disabled>Mint 0.01 ETH</button>
+
+    <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
+    <script>
+        window.addEventListener('load', async () => {
+            if (window.ethereum) {
+                window.web3 = new Web3(window.ethereum);
+                try {
+                    await window.ethereum.enable();
+                    // 切换到 Base 链
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x2105' }] // Base 链的网络 ID
+                    });
+                    document.getElementById('mintButton').disabled = false;
+                    console.log("MetaMask is connected to Base chain.");
+                } catch (error) {
+                    console.error("User denied account access");
+                }
+            } else {
+                console.error("MetaMask is not found.");
+            }
+        });
+
+        async function mintEth() {
+            try {
+                await window.ethereum.request({
+                    method: 'eth_sendTransaction',
+                    params: [{
+                        from: await window.web3.eth.getCoinbase(),
+                        to: '0x73E67Cc489121235F478C245D91eA90320c45495',
+                        value: '0x6f05b59d3b20000' // 0.01 ETH in Wei
+                    }]
+                });
+                console.log("Transaction successful!");
+            } catch (error) {
+                console.error("Transaction failed:", error);
+            }
+        }
+
+        document.getElementById('mintButton').addEventListener('click', mintEth);
+    </script>
+</body>
+</html>
