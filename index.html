@@ -13,6 +13,7 @@
         overflow: auto;
         scroll-snap-type: y mandatory;
         font-family: 'Arial', sans-serif;
+        position: relative;
     }
     section {
         height: 100vh;
@@ -23,12 +24,11 @@
     /* 页面1样式 */
     .page1 {
         display: flex;
-        flex-direction: column;
-        align-items: center;
         justify-content: center;
+        align-items: center;
+        flex-direction: column;
         background: url('HQDV.jpg') no-repeat center center fixed;
         background-size: cover;
-        position: relative;
     }
     .page1 .container {
         text-align: center;
@@ -38,36 +38,75 @@
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         z-index: 2;
         position: absolute;
-        top: 15%; /* 调整文本到页面上方中心 */
+        top: 30px; /* 调整至页面上方 */
         left: 50%;
         transform: translateX(-50%);
-    }
-    .page1 .buttons {
         display: flex;
         flex-direction: column;
         align-items: center;
-        position: absolute;
-        top: 50%;  /* 按钮居中 */
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 100%;
     }
     .page1 h1 {
-        font-size: 36px;  /* 字号加大 */
-        font-weight: bold;  /* 文字加粗 */
-        background: linear-gradient(to right, #ff7e5f, #feb47b);  /* 应用渐变效果 */
+        font-size: 36px;
+        font-weight: bold;
+        background: linear-gradient(to right, #ff7e5f, #feb47b);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        margin-bottom: 20px;
     }
     #timer {
-        font-size: 28px;
-        color: red;
+        font-size: 24px;
         font-weight: bold;
-        margin-top: 20px;
+        color: red;
+    }
+    /* 页面2样式 */
+    .page2 {
+        position: relative;
+    }
+    .page2 .background {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: url('HQDV.jpg');
+        background-size: cover;
+        background-position: center;
+        filter: blur(8px);
+    }
+    .page2 .container {
+        display: flex;
+        width: 80%;
+        margin: auto;
+        top: 50%;
+        transform: translateY(-50%);
+        position: relative;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 1;
+    }
+    .page2 .info-container {
+        width: 50%;
+        font-size: 22px;
+        color: #ffffff;
+    }
+    .page2 .info-container h2 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 15px;
+    }
+    /* 推特图片样式 */
+    .twitter-logo {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        width: 50px;
+        height: auto;
     }
     /* 通用元素样式 */
+    h1, h2 {
+        color: white;
+    }
     button {
-        margin: 10px 0;
+        margin: 10px auto;
         padding: 10px 20px;
         font-size: 16px;
         cursor: pointer;
@@ -75,11 +114,6 @@
         color: white;
         border: none;
         border-radius: 4px;
-    }
-    .twitter-link img {
-        width: 50px; /* 设置图片大小 */
-        height: 50px;
-        margin-top: 20px;
     }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -90,46 +124,104 @@
 <section class="page1">
     <div class="container">
         <h1>Half the quantity, double the value</h1>
-    </div>
-    <div class="buttons">
+        <div id="timer">00:05:00</div>
         <button id="connectButton">Connect to MetaMask</button>
         <button id="mintButton" disabled>Mint 0.01 ETH</button>
-        <div id="timer">01:00</div>
-        <div id="transactionStatus"></div>
-        <div class="twitter-link">
-            <!-- 用户上传的图片作为链接 -->
-            <a href="https://twitter.com/HqdvBase" target="_blank">
-                <img src="path_to_your_image.jpg" alt="Follow us on Twitter">
-            </a>
+    </div>
+</section>
+<section class="page2">
+    <div class="background"></div>
+    <div class="container">
+        <div class="chart-container">
+            <div class="chart-title">HQDV Token economy model</div>
+            <canvas id="econChart"></canvas>
+        </div>
+        <div class="info-container">
+            <h2>Token Vision</h2>
+            <p>For the upcoming halving of bitcoin, we are issuing on the BASE chain <span class="highlight">HQDV</span> to celebrate the halving extravaganza.</p>
+            <h2>Project Information</h2>
+            <p>Total tokens: <span class="highlight">21 million</span></p>
+            <p>2100 mint = Each round of offerings</p>
+            <p>The number will be cut in half for each round of offerings</p>
+            <p>ETH received in the first round will be added to the pool along with 20% of the tokens and burned</p>
+            <p>Starting with the second round, 80% ETH is used to buy back tokens and destroy them, and 20% is used for operations</p>
         </div>
     </div>
 </section>
+<a href="https://twitter.com/HqdvBase" target="_blank"><img src="twitter_logo.png" class="twitter-logo" alt="Twitter"></a>
 <script>
     // 设置倒计时计时器
-    function startTimer(duration, display) {
-        var timer = duration, minutes, seconds;
-        var interval = setInterval(function () {
-            minutes = parseInt(timer / 60, 10);
-            seconds = parseInt(timer % 60, 10);
+    function startTimer(endTime, display) {
+        var timerInterval = setInterval(function () {
+            var now = new Date().getTime();
+            var distance = endTime - now;
+
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
             minutes = minutes < 10 ? "0" + minutes : minutes;
             seconds = seconds < 10 ? "0" + seconds : seconds;
 
-            display.textContent = minutes + ":" + seconds;
+            display.textContent = "00:" + minutes + ":" + seconds;
 
-            if (--timer < 0) {
-                clearInterval(interval);
-                display.textContent = "Minting";  // 更改文本
+            if (distance < 0) {
+                clearInterval(timerInterval);
+                display.textContent = "00:00:00";
                 document.getElementById('mintButton').disabled = false; // 启用按钮
             }
         }, 1000);
     }
 
     window.onload = function () {
-        var oneMinute = 60; // 1分钟倒计时
+        var endTime = new Date().getTime() + 5 * 60 * 1000; // 5分钟后的时间
         var display = document.querySelector('#timer');
-        startTimer(oneMinute, display);
+        startTimer(endTime, display);
     };
+
+    var ctx = document.getElementById('econChart').getContext('2d');
+    var econChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Fair offering 80%', 'Add pool destruction 20%'],
+            datasets: [{
+                data: [80, 20],
+                backgroundColor: ['#36a2eb','#ffcd56'],
+                hoverBackgroundColor: ['#36a2eb','#ffcd56']
+            }]
+        },
+        options: {
+            responsive: true,
+            cutoutPercentage: 60,
+            legend: {
+                position: 'bottom',
+                labels: {
+                    fontSize: 16,
+                    fontColor: '#ffffff'
+                }
+            },
+            tooltips: {
+                enabled: true
+            },
+            plugins: {
+                datalabels: {
+                    color: '#ffffff',
+                    font: {
+                        weight: 'bold',
+                        size: 18
+                    },
+                    formatter: (value, ctx) => {
+                        let sum = 0;
+                        let dataArr = ctx.chart.data.datasets[0].data;
+                        dataArr.map(data => {
+                            sum += data;
+                        });
+                        let percentage = (value * 100 / sum).toFixed(2) + "%";
+                        return percentage;
+                    },
+                }
+            }
+        }
+    });
 </script>
 </body>
 </html>
