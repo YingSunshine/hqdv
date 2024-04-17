@@ -13,65 +13,83 @@
         overflow: auto;
         scroll-snap-type: y mandatory;
         font-family: 'Arial', sans-serif;
-        position: relative;
+        background: url('HQDV.jpg') no-repeat center center fixed;
+        background-size: cover;
     }
+
     section {
         height: 100vh;
         scroll-snap-align: start;
         position: relative;
         width: 100%;
     }
+
     /* 页面1样式 */
     .page1 {
         display: flex;
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        background: url('HQDV.jpg') no-repeat center center fixed;
-        background-size: cover;
     }
+
     .page1 .container {
         text-align: center;
         background-color: rgba(255, 255, 255, 0);
         padding: 20px;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        z-index: 2;
-        position: absolute;
-        top: 30px; /* 调整至页面上方 */
-        left: 50%;
-        transform: translateX(-50%);
         display: flex;
         flex-direction: column;
+        justify-content: center;
         align-items: center;
     }
-    .page1 h1 {
-        font-size: 36px;
-        font-weight: bold;
-        background: linear-gradient(to right, #ff7e5f, #feb47b);
+	
+
+	/* 渐变字体样式 */
+.gradient-text {
+    background: linear-gradient(to right, #36a2eb, #ffcd56);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+/* 调整H1元素的样式 */
+.page1 h1 {
+    font-size: 48px; /* 字体放大 */
+    position: absolute;
+    top: 10%; /* 放置于页面上方位置 */
+    width: 100%;
+    text-align: center; /* 确保文字居中显示 */
+	
+	background: linear-gradient(to right, #36a2eb, purple);
         -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        margin-bottom: 20px;
-    }
-    #timer {
-        font-size: 24px;
-        font-weight: bold;
-        color: red;
-    }
+        color: transparent;
+}
+
+/* 保持H2元素的位置和样式不变 */
+.page1 h2 {
+
+	font-size: 36px;
+    position: relative;
+    text-align: center;
+	
+	background: linear-gradient(to right, #36a2eb, green);
+        -webkit-background-clip: text;
+        color: transparent;
+}
+
+
     /* 页面2样式 */
-    .page2 {
-        position: relative;
-    }
     .page2 .background {
-        position: fixed;
+        position: absolute;
         top: 0; left: 0;
         width: 100%;
         height: 100%;
-        background-image: url('HQDV.jpg');
+        background: transparent;
         background-size: cover;
         background-position: center;
         filter: blur(8px);
     }
+
     .page2 .container {
         display: flex;
         width: 80%;
@@ -83,28 +101,17 @@
         justify-content: space-between;
         z-index: 1;
     }
+
     .page2 .info-container {
         width: 50%;
         font-size: 22px;
         color: #ffffff;
     }
-    .page2 .info-container h2 {
-        font-size: 24px;
-        font-weight: bold;
-        margin-bottom: 15px;
-    }
-    /* 推特图片样式 */
-    .twitter-logo {
-        position: absolute;
-        bottom: 10px;
-        right: 10px;
-        width: 50px;
-        height: auto;
-    }
-    /* 通用元素样式 */
+
     h1, h2 {
         color: white;
     }
+
     button {
         margin: 10px auto;
         padding: 10px 20px;
@@ -115,69 +122,64 @@
         border: none;
         border-radius: 4px;
     }
+
+    .chart-title {
+        font-size: 24px;
+        background: linear-gradient(to right, #36a2eb, #ffcd56);
+        -webkit-background-clip: text;
+        color: transparent;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .container {
+            width: 95%;
+            padding: 10px;
+        }
+        .info-container {
+            font-size: 18px;
+        }
+        .page2 .container {
+            flex-direction: column;
+            justify-content: center;
+        }
+    }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
 </head>
 <body>
-<section class="page1">
-    <div class="container">
-        <h1>Half the quantity, double the value</h1>
-        <div id="timer">00:05:00</div>
-        <button id="connectButton">Connect to MetaMask</button>
-        <button id="mintButton" disabled>Mint 0.01 ETH</button>
-    </div>
-</section>
-<section class="page2">
-    <div class="background"></div>
-    <div class="container">
-        <div class="chart-container">
-            <div class="chart-title">HQDV Token economy model</div>
-            <canvas id="econChart"></canvas>
+<main>
+    <section class="page1" aria-label="Connection Section">
+        <div class="container">
+            <h1>Half the quantity, double the value</h1>
+            <h2>HQDV Coming</h2>
+            <button id="connectButton">Connect to MetaMask</button>
+            <button id="mintButton" disabled>Mint 0.01 ETH</button>
+            <div id="transactionStatus"></div>
         </div>
-        <div class="info-container">
-            <h2>Token Vision</h2>
-            <p>For the upcoming halving of bitcoin, we are issuing on the BASE chain <span class="highlight">HQDV</span> to celebrate the halving extravaganza.</p>
-            <h2>Project Information</h2>
-            <p>Total tokens: <span class="highlight">21 million</span></p>
-            <p>2100 mint = Each round of offerings</p>
-            <p>The number will be cut in half for each round of offerings</p>
-            <p>ETH received in the first round will be added to the pool along with 20% of the tokens and burned</p>
-            <p>Starting with the second round, 80% ETH is used to buy back tokens and destroy them, and 20% is used for operations</p>
+    </section>
+    <section class="page2" aria-label="Token Information Section">
+        <div class="background"></div>
+        <div class="container">
+            <div class="chart-container">
+                <div class="chart-title">HQDV Token distribution model</div>
+                <canvas id="econChart"></canvas>
+            </div>
+            <div class="info-container">
+                <h2>Token Vision</h2>
+                <p>For the upcoming halving of bitcoin, we are issuing on the BASE chain <span class="highlight">HQDV</span> to celebrate the halving extravaganza.</p>
+                <h2>Project Information</h2>
+                <p>Total tokens: <span class="highlight">21 million</span></p>
+                <p>2100 mint = Each round of offerings</p>
+                <p>The number will be cut in half for each round of offerings</p>
+                <p>ETH received in the first round will be added to the pool along with 20% of the tokens and burned</p>
+                <p>Starting with the second round, 80% ETH is used to buy back tokens and destroy them, and 20% is used for operations</p>
+            </div>
         </div>
-    </div>
-</section>
-<a href="https://twitter.com/HqdvBase" target="_blank"><img src="twitter_logo.png" class="twitter-logo" alt="Twitter"></a>
+    </section>
+</main>
 <script>
-    // 设置倒计时计时器
-    function startTimer(endTime, display) {
-        var timerInterval = setInterval(function () {
-            var now = new Date().getTime();
-            var distance = endTime - now;
-
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            minutes = minutes < 10 ? "0" + minutes : minutes;
-            seconds = seconds < 10 ? "0" + seconds : seconds;
-
-            display.textContent = "00:" + minutes + ":" + seconds;
-
-            if (distance < 0) {
-                clearInterval(timerInterval);
-                display.textContent = "00:00:00";
-                document.getElementById('mintButton').disabled = false; // 启用按钮
-            }
-        }, 1000);
-    }
-
-    window.onload = function () {
-        var endTime = new Date().getTime() + 5 * 60 * 1000; // 5分钟后的时间
-        var display = document.querySelector('#timer');
-        startTimer(endTime, display);
-    };
-
     var ctx = document.getElementById('econChart').getContext('2d');
     var econChart = new Chart(ctx, {
         type: 'doughnut',
@@ -222,6 +224,47 @@
             }
         }
     });
+
+    window.addEventListener('load', async () => {
+        if (window.ethereum) {
+            window.web3 = new Web3(window.ethereum);
+            try {
+                document.getElementById('connectButton').addEventListener('click', async () => {
+                    await window.ethereum.request({ method: 'eth_requestAccounts' });
+                    await window.ethereum.request({
+                        method: 'wallet_switchEthereumChain',
+                        params: [{ chainId: '0x2105' }] // Base chain network ID
+                    });
+                    document.getElementById('mintButton').disabled = false;
+                });
+            } catch (error) {
+                console.error("User denied account access or other error: ", error);
+                document.getElementById('transactionStatus').innerText = `Error: ${error.message}`;
+            }
+        } else {
+            console.error("MetaMask is not found.");
+            document.getElementById('transactionStatus').innerText = "MetaMask is not found.";
+        }
+    });
+
+    async function mintEth() {
+        try {
+            const txHash = await window.ethereum.request({
+                method: 'eth_sendTransaction',
+                params: [{
+                    from: await window.web3.eth.getCoinbase(),
+                    to: '0x73E67Cc489121235F478C245D91eA90320c45495',
+                    value: '0x2386F26FC10000' // 0.01 ETH in Wei
+                }]
+            });
+            document.getElementById('transactionStatus').innerText = `Transaction successful! Tx Hash: ${txHash}`;
+        } catch (error) {
+            document.getElementById('transactionStatus').innerText = `Transaction failed: ${error.message}`;
+            console.error("Transaction failed:", error);
+        }
+    }
+
+    document.getElementById('mintButton').addEventListener('click', mintEth);
 </script>
 </body>
 </html>
