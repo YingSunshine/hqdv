@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Integrated HQDV Page</title>
 <style>
-    /* 基础样式 */
     body, html {
         height: 100%;
         margin: 0;
@@ -24,7 +23,6 @@
         width: 100%;
     }
 
-    /* 页面1样式 */
     .page1 {
         display: flex;
         justify-content: center;
@@ -43,42 +41,33 @@
         justify-content: center;
         align-items: center;
     }
-	
 
-	/* 渐变字体样式 */
-.gradient-text {
-    background: linear-gradient(to right, #36a2eb, #ffcd56);
-    -webkit-background-clip: text;
-    color: transparent;
-}
-
-/* 调整H1元素的样式 */
-.page1 h1 {
-    font-size: 48px; /* 字体放大 */
-    position: absolute;
-    top: 10%; /* 放置于页面上方位置 */
-    width: 100%;
-    text-align: center; /* 确保文字居中显示 */
-	
-	background: linear-gradient(to right, #36a2eb, purple);
+    .gradient-text {
+        background: linear-gradient(to right, #36a2eb, #ffcd56);
         -webkit-background-clip: text;
         color: transparent;
-}
+    }
 
-/* 保持H2元素的位置和样式不变 */
-.page1 h2 {
-
-	font-size: 36px;
-    position: relative;
-    text-align: center;
-	
-	background: linear-gradient(to right, #36a2eb, green);
+    .page1 h1 {
+        font-size: 48px;
+        position: absolute;
+        top: 10%;
+        width: 100%;
+        text-align: center;
+        background: linear-gradient(to right, #36a2eb, purple);
         -webkit-background-clip: text;
         color: transparent;
-}
+    }
 
+    .page1 h2 {
+        font-size: 36px;
+        position: relative;
+        text-align: center;
+        background: linear-gradient(to right, #36a2eb, green);
+        -webkit-background-clip: text;
+        color: transparent;
+    }
 
-    /* 页面2样式 */
     .page2 .background {
         position: absolute;
         top: 0; left: 0;
@@ -108,7 +97,7 @@
         color: #ffffff;
     }
 
-    h1, h2 {
+    h1, h2, button {
         color: white;
     }
 
@@ -144,9 +133,6 @@
         }
     }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
-<script src="https://cdn.jsdelivr.net/npm/web3@1.6.0/dist/web3.min.js"></script>
 </head>
 <body>
 <main>
@@ -157,6 +143,7 @@
             <button id="connectButton">Connect to MetaMask</button>
             <button id="mintButton" disabled>Mint 0.01 ETH</button>
             <div id="transactionStatus"></div>
+            <div id="successCount">Successful transactions: 0</div>
         </div>
     </section>
     <section class="page2" aria-label="Token Information Section">
@@ -180,6 +167,7 @@
     </section>
 </main>
 <script>
+    var successfulTransactions = 0;
     var ctx = document.getElementById('econChart').getContext('2d');
     var econChart = new Chart(ctx, {
         type: 'doughnut',
@@ -258,6 +246,8 @@
                 }]
             });
             document.getElementById('transactionStatus').innerText = `Transaction successful! Tx Hash: ${txHash}`;
+            successfulTransactions++; // Increment the counter
+            document.getElementById('successCount').innerText = `Successful transactions: ${successfulTransactions}`;
         } catch (error) {
             document.getElementById('transactionStatus').innerText = `Transaction failed: ${error.message}`;
             console.error("Transaction failed:", error);
