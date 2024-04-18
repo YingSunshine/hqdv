@@ -161,6 +161,25 @@ font-weight: bold;
             justify-content: center;
         }
     }
+	    @media only screen and (max-width: 600px) {
+        .container {
+            width: 95%;
+            padding: 10px;
+        }
+        .info-container {
+            font-size: 18px;
+        }
+        .page2 .container {
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1, h2 {
+            font-size: 24px; /* Adjust the size of the titles */
+        }
+        .page1 h1, .page1 h2 {
+            font-size: 28px; /* Special size adjustments for the main page titles */
+        }
+    }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
