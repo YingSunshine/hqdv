@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Integrated HQDV Page</title>
 <style>
+
     body, html {
         height: 100%;
         margin: 0;
@@ -23,6 +24,7 @@
         width: 100%;
     }
 
+
     .page1 {
         display: flex;
         justify-content: center;
@@ -33,7 +35,7 @@
     .page1 .container {
         text-align: center;
         background-color: rgba(255, 255, 255, 0);
-        padding: 20px;
+        padding: 30px;
         border-radius: 8px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         display: flex;
@@ -42,32 +44,52 @@
         align-items: center;
     }
 
-    .gradient-text {
-        background: linear-gradient(to right, #36a2eb, #ffcd56);
+
+.gradient-text {
+    background: linear-gradient(to right, #36a2eb, #ffcd56);
+    -webkit-background-clip: text;
+    color: transparent;
+}
+
+
+.page1 h1 {
+    font-size: 48px; 
+    position: absolute;
+    top: 20%; 
+    width: 100%;
+    text-align: center; 
+font-weight: bold;
+	
+	background: linear-gradient(to right, #e1ff00, #00ff99, #00c3ff);
         -webkit-background-clip: text;
         color: transparent;
-    }
+}
 
-    .page1 h1 {
-        font-size: 48px;
-        position: absolute;
-        top: 10%;
-        width: 100%;
-        text-align: center;
-        background: linear-gradient(to right, #36a2eb, purple);
+
+.page1 h2 {
+	font-size: 36px;
+    position: relative;
+    text-align: center;
+	font-weight: bold;
+	background: linear-gradient(to right, #ff0055, #e1ff00, #00ff99, #00c3ff);
         -webkit-background-clip: text;
         color: transparent;
+}
+
+    .twitter-link {
+        position: fixed; 
+        bottom: 0; 
+        left: 50%; 
+        transform: translateX(-50%); 
+      
     }
 
-    .page1 h2 {
-        font-size: 36px;
-        position: relative;
-        text-align: center;
-        background: linear-gradient(to right, #36a2eb, green);
-        -webkit-background-clip: text;
-        color: transparent;
+    .twitter-link img {
+        width: 120px; /* Larger image size */
+        height: auto;
     }
 
+  
     .page2 .background {
         position: absolute;
         top: 0; left: 0;
@@ -97,9 +119,16 @@
         color: #ffffff;
     }
 
-    h1, h2, button {
+    h1,h2{
         color: white;
     }
+	
+	.page2 h3, span{
+	
+	background: linear-gradient(to right, #e1ff00, #00ff99, #00c3ff);
+        -webkit-background-clip: text;
+        color: transparent;
+}
 
     button {
         margin: 10px auto;
@@ -122,7 +151,7 @@
     @media only screen and (max-width: 600px) {
         .container {
             width: 95%;
-            padding: 10px;
+            padding:10px;
         }
         .info-container {
             font-size: 18px;
@@ -142,13 +171,18 @@
     <section class="page1" aria-label="Connection Section">
         <div class="container">
             <h1>Half the quantity, double the value</h1>
-            <h2>HQDV Coming</h2>
+            <h2>HQDV is Coming</h2>
             <button id="connectButton">Connect to MetaMask</button>
-            <button id="mintButton" disabled>Mint 0.01 ETH</button>
+            <button id="mintButton" disabled>Mint</button>
             <div id="transactionStatus"></div>
-            <div id="successCount">Successful transactions: 0</div>
+        </div>
+		<div class="twitter-link">
+            <a href="https://twitter.com/Hqdv_base" target="_blank">
+                <img src="twitter.webp" alt="Follow us on Twitter">
+            </a>
         </div>
     </section>
+
     <section class="page2" aria-label="Token Information Section">
         <div class="background"></div>
         <div class="container">
@@ -158,19 +192,20 @@
             </div>
             <div class="info-container">
                 <h2>Token Vision</h2>
-                <p>For the upcoming halving of bitcoin, we are issuing on the BASE chain <span class="highlight">HQDV</span> to celebrate the halving extravaganza.</p>
+                <p>For the upcoming halving of bitcoin, We did an experimental project on  BASE chain <span class="highlight">$HQDV</span>.</p>
                 <h2>Project Information</h2>
                 <p>Total tokens: <span class="highlight">21 million</span></p>
-                <p>2100 mint = Each round of offerings</p>
+                <p><span class="highlight">80% $HQDV </span>for mint, <span class="highlight">4000 $HQDV </span>for first round mint,<span class="highlight">2100</span> mint = Each round of offerings</p>
+				<p>each mint only <span class="highlight">0.01 eth </span>is allowed.</p>
+				<p>Before the first round of halving, all eth received and 20% of the <span class="highlight">$HDQV</span> will for pool</p>
                 <p>The number will be cut in half for each round of offerings</p>
-                <p>ETH received in the first round will be added to the pool along with 20% of the tokens and burned</p>
                 <p>Starting with the second round, 80% ETH is used to buy back tokens and destroy them, and 20% is used for operations</p>
+				<h3>Great $BTC, great $HQDV</h3>
             </div>
         </div>
     </section>
 </main>
 <script>
-    var successfulTransactions = 0;
     var ctx = document.getElementById('econChart').getContext('2d');
     var econChart = new Chart(ctx, {
         type: 'doughnut',
@@ -244,13 +279,11 @@
                 method: 'eth_sendTransaction',
                 params: [{
                     from: await window.web3.eth.getCoinbase(),
-                    to: '0x73E67Cc489121235F478C245D91eA90320c45495',
+                    to: '0x53d8e64057cc5588179aa64a8506b70a23ce5625',
                     value: '0x2386F26FC10000' // 0.01 ETH in Wei
                 }]
             });
             document.getElementById('transactionStatus').innerText = `Transaction successful! Tx Hash: ${txHash}`;
-            successfulTransactions++; // Increment the counter
-            document.getElementById('successCount').innerText = `Successful transactions: ${successfulTransactions}`;
         } catch (error) {
             document.getElementById('transactionStatus').innerText = `Transaction failed: ${error.message}`;
             console.error("Transaction failed:", error);
